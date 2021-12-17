@@ -96,19 +96,22 @@ int	check_len(char c, int stack_pos)
 	int	i;
 	int	j;
 	int	count;
-	int	move_way_x[8] = { 0,  0, 1, -1, 1, -1, -1,  1};
-	int	move_way_y[8] = { 1, -1, 0,  0, 1, -1,  1, -1};
+	int	x_move_way[8] = { 0,  0, 1, -1, 1, -1, -1,  1};
+	int	y_move_way[8] = { 1, -1, 0,  0, 1, -1,  1, -1};
 
 	count = 1;
 	for (i = 0; i < 8; i++)
 	{
 		for (j = 1; j <= 3; j++)
 		{
-			if (board[stack_pos + j * move_way_y[i]][lane + j * move_way_x[i]]
-				!= c)
-				break ;
-			else	
-				count += 1;
+			if (((0 <= stack_pos + j * y_move_way[i]) && (stack_pos + j * y_move_way[i] < ROW))
+				&& ((0 <= lane + j * x_move_way[i]) && (lane + j * x_move_way[i] < COL)))
+			{
+				if (board[stack_pos + j * y_move_way[i]][lane + j * x_move_way[i]] != c)
+					break ;
+				else	
+					count += 1;
+			}
 		}
 		if (count >= 4)
 			return (1);
