@@ -2,10 +2,14 @@
 
 #define ROW	6
 #define	COL	7
+#define BLACK_TURN 1
+#define WHITE_TURN 2
 
 int		lane = 0;
-char	which_turn = 'X';
-char	board[ROW][COL];
+//char	which_turn = 'X';
+int		which_turn = BLACK_TURN;
+//char	board[ROW][COL];
+int		board[ROW][COL];
 
 void	init_board(void)
 {
@@ -31,7 +35,7 @@ void	print_board(void)
 	for (y = 0; y < ROW; y++)
 	{
 		for (x = 0; x < COL; x++)
-			printf("| %c ", board[y][x]);
+			printf("| %s ", (board[y][x] == 1) ? "●" : (board[y][x] == 2) ? "○" : " ");
 		printf("|\n");
 		printf("%s\n", frame);
 	}
@@ -85,13 +89,13 @@ int	choose_lane(void)
 
 void change_turn(void)
 {
-	if (which_turn == 'X')
-		which_turn = 'O';
+	if (which_turn == BLACK_TURN)
+		which_turn = WHITE_TURN;
 	else
-		which_turn = 'X';
+		which_turn = BLACK_TURN;
 }
 
-int	check_len(char c, int stack_pos)
+int	check_len(int turn, int stack_pos)
 {
 	int	i;
 	int	j;
@@ -107,7 +111,7 @@ int	check_len(char c, int stack_pos)
 			if (((0 <= stack_pos + j * y_move_way[i]) && (stack_pos + j * y_move_way[i] < ROW))
 				&& ((0 <= lane + j * x_move_way[i]) && (lane + j * x_move_way[i] < COL)))
 			{
-				if (board[stack_pos + j * y_move_way[i]][lane + j * x_move_way[i]] != c)
+				if (board[stack_pos + j * y_move_way[i]][lane + j * x_move_way[i]] != turn)
 					break ;
 				else	
 					count += 1;
@@ -130,7 +134,7 @@ int	main(void)
 
 	while (1)
 	{
-		printf("\n%c turn!  ", which_turn);
+		printf("\n%s turn!  ", (which_turn == 1) ? "●" : "○");
 		stack_pos = choose_lane();
 		if (stack_pos == -1)
 		{
@@ -140,7 +144,7 @@ int	main(void)
 		print_board();
 		if (check_len(which_turn, stack_pos))
 		{
-			printf("Player %c wins!\n", which_turn);
+			printf("Player %s wins!\n", (which_turn == 1) ? "●" : "○");
 			break ;
 		}
 		change_turn();
